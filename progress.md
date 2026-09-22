@@ -369,6 +369,11 @@ Test:
 * [x] Understood backtracking
 * [x] Understood empty domains/conflicts
 * [x] Manually walked through CSP allocation examples
+* [x] Understood how Patient objects map to CSP variables
+* [x] Understood how possible Bed objects map to CSP domain values
+* [x] Understood the difference between CSP representation and constraint checking
+
+---
 
 ### Patient model
 
@@ -410,17 +415,15 @@ Equipment: Ventilator
 
 ---
 
-# 11. CURRENT STEP
+### Bed model
 
-We are currently implementing:
+File:
 
 ```text
 models/bed.py
 ```
 
-The Bed model has already been explained.
-
-Planned code:
+Current code:
 
 ```python
 class Bed:
@@ -439,9 +442,9 @@ class Bed:
         self.available = available
 ```
 
-A temporary `test_bed.py` should be used to verify it.
+Bed model has been successfully tested.
 
-Expected test data:
+Test data:
 
 ```text
 Bed ID: ICU-01
@@ -453,31 +456,330 @@ Available: True
 
 ---
 
-# 12. EXACT NEXT STEP
+### CSP Problem Representation
 
-After `models/bed.py` is tested successfully:
+File:
 
-DO NOT immediately create more files.
+```text
+csp/problem.py
+```
 
-First explain:
+Purpose:
+
+`problem.py` connects the Patient and Bed model objects and creates the initial CSP representation.
+
+The `HospitalBedCSP` class currently stores:
+
+* Patient objects
+* Bed objects
+* CSP variables
+* Initial domains
+
+Variables are represented using patient IDs.
+
+Example:
+
+```text
+Patients:
+
+P001
+P002
+```
+
+becomes:
+
+```text
+Variables:
+
+['P001', 'P002']
+```
+
+Initial domains contain the available bed IDs for each patient.
+
+Example:
+
+```text
+Patient P001 -> ['ICU-01', 'ICU-02', 'GEN-01']
+Patient P002 -> ['ICU-01', 'ICU-02', 'GEN-01']
+```
+
+`problem.py` has been successfully tested using a temporary `test-problem.py` file.
+
+Important concept:
 
 ```text
 Patient Object
        +
 Bed Object
        ↓
-CSP representation
+CSP Representation
        ↓
 Variables
        +
-Domains
+Initial Domains
 ```
 
-The next conceptual goal is to understand exactly how the normal Python objects become the mathematical CSP representation.
-
-After that, continue one file at a time.
+At this stage, domains are intentionally not filtered by constraints.
 
 ---
+
+### CSP Constraints
+
+File:
+
+```text
+csp/constraints.py
+```
+
+The constraints are implemented as separate functions so that each hospital rule remains understandable and independently testable.
+
+#### 1. Bed Type Compatibility
+
+Function:
+
+```python
+check_bed_type(patient, bed)
+```
+
+Purpose:
+
+Checks whether the bed type matches the patient's required bed type.
+
+Example:
+
+```text
+Patient requires: ICU
+
+ICU-01 → ICU       → True
+GEN-01  → General  → False
+```
+
+Successfully implemented and tested.
+
+---
+
+#### 2. Equipment Compatibility
+
+Function:
+
+```python
+check_equipment(patient, bed)
+```
+
+Purpose:
+
+Checks whether the bed contains equipment required by the patient.
+
+Logic:
+
+```text
+Patient requires no equipment
+        ↓
+True
+
+Otherwise:
+
+Required equipment == Bed equipment
+        ↓
+True / False
+```
+
+Successfully implemented and tested.
+
+---
+
+#### 3. Bed Availability
+
+Function:
+
+```python
+check_availability(bed)
+```
+
+Purpose:
+
+Checks whether the bed is currently available for allocation.
+
+Logic:
+
+```text
+bed.available == True
+        ↓
+Valid
+
+bed.available == False
+        ↓
+Invalid
+```
+
+The availability constraint uses the existing `available` property in `models/bed.py`.
+
+The constraint has been implemented and is ready for testing.
+
+---
+
+## Current CSP Engine Structure
+
+The project has now reached this stage:
+
+```text
+models/
+├── patient.py       [COMPLETE + TESTED]
+└── bed.py           [COMPLETE + TESTED]
+
+csp/
+├── problem.py       [COMPLETE + TESTED]
+├── constraints.py   [IN PROGRESS]
+├── propagation.py   [NOT STARTED]
+└── solver.py        [NOT STARTED]
+```
+
+Current conceptual flow:
+
+```text
+Patient Objects
+      +
+Bed Objects
+      │
+      ▼
+ problem.py
+      │
+      ▼
+CSP Variables
+      +
+Initial Domains
+      │
+      ▼
+constraints.py
+      │
+      ├── Bed Type Compatibility
+      ├── Equipment Compatibility
+      └── Bed Availability
+      │
+      ▼
+Future: Constraint Propagation
+      │
+      ▼
+Future: Backtracking Solver
+      │
+      ▼
+Final Allocation
+```
+
+---
+
+# 11. CURRENT STEP
+
+We are currently implementing and testing:
+
+```text
+csp/constraints.py
+```
+
+The following constraints have been implemented:
+
+```text
+[x] Bed type compatibility
+[x] Equipment compatibility
+[x] Bed availability
+```
+
+The availability constraint should be tested with an unavailable bed, for example:
+
+```text
+ICU-01 → Available = True
+ICU-02 → Available = False
+GEN-01  → Available = True
+```
+
+Expected availability results:
+
+```text
+ICU-01: True
+ICU-02: False
+GEN-01: True
+```
+
+After confirming the availability test, the next constraint will be:
+
+```text
+Isolation Compatibility
+```
+
+However, before implementing it, the Bed model must be reviewed because the current `Bed` class does not contain an isolation-related property.
+
+Current Bed model:
+
+```text
+Bed
+├── bed_id
+├── ward
+├── bed_type
+├── equipment
+└── available
+```
+
+Current Patient model contains:
+
+```text
+Patient
+├── patient_id
+├── bed_type_required
+├── isolation_required
+└── equipment_required
+```
+
+Therefore, the project must first determine how an isolation-capable bed will be represented before implementing the isolation constraint.
+
+---
+
+# 12. EXACT NEXT STEP
+
+First:
+
+```text
+Test check_availability()
+```
+
+using an available and unavailable bed.
+
+After the test succeeds:
+
+1. Explain the isolation requirement.
+2. Identify the missing Bed property needed to represent isolation capability.
+3. Decide the simplest appropriate modification to `models/bed.py`.
+4. Modify and retest `bed.py` if necessary.
+5. Implement the isolation constraint in `constraints.py`.
+6. Test the isolation constraint.
+
+Only after all individual constraints are working will we move to:
+
+```text
+Combining Constraints
+        ↓
+Constraint Propagation
+        ↓
+Backtracking Search
+        ↓
+Final CSP Solver
+```
+
+The project continues to follow the rule:
+
+```text
+Explain
+   ↓
+Implement one component
+   ↓
+Test
+   ↓
+Confirm
+   ↓
+Update progress
+   ↓
+Move to next component
+```
+
 
 # 13. Important Development Rules
 
