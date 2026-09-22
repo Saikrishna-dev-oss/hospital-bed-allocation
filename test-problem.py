@@ -2,8 +2,8 @@ from models.patient import Patient
 from models.bed import Bed
 from csp.problem import HospitalBedCSP
 
-patient1 = Patient("P001", "ICU", False, "ventilator")
-patient2 = Patient("P002", "General", False, None)
+patient1 = Patient("P001", "ICU", "ventilator", False)
+patient2 = Patient("P002", "General", None, False)
 
 bed1 = Bed("ICU-01", "ICU", "ICU", "ventilator", True)
 bed2 = Bed("ICU-02", "ICU", "ICU", None, True)

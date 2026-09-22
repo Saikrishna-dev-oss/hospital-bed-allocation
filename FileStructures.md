@@ -121,3 +121,30 @@ Patient objects ─────┐
                      ▼
               Final allocation
 ```
+
+After Propagation
+
+```
+Patient + Beds
+       ↓
+   problem.py
+       ↓
+Variables + Domains
+       ↓
+ constraints.py
+       ↓
+Check constraints
+       ↓
+propagation.py
+       ↓
+Remove invalid values
+       ↓
+   Reduced domains
+       ↓
+     solver.py
+       ↓
+ Backtracking Search
+       ↓
+ Final Allocation
+ ```
+ 
