@@ -1,12 +1,16 @@
-# Hospital Bed Allocation Using CSP
+# 🏥 Hospital Bed Allocation Using CSP
 
 A Constraint Satisfaction Problem (CSP)-based system that allocates available hospital beds to patients according to predefined requirements and constraints.
 
-This project was developed as an Artificial Intelligence PBL project. It is a decision-support and resource-allocation prototype; it is **not** intended for medical diagnosis or real clinical decision-making.
+> 🎓 An Artificial Intelligence PBL project demonstrating CSP-based resource allocation.
+
+> 🌐 **Live Application:** [Hospital Bed Allocation Using CSP](https://hospital-bed-allocation.streamlit.app/)
+
+> ⚠️ This is a decision-support and resource-allocation prototype. It is **not** intended for medical diagnosis or real clinical decision-making.
 
 ---
 
-## Project Overview
+## 📌 Project Overview
 
 Hospitals have a limited number of beds, while patients may require particular bed types, equipment, isolation facilities, and availability. Manually assigning beds becomes difficult when several of these conditions must be satisfied at the same time.
 
@@ -14,7 +18,7 @@ This project models hospital bed allocation as a **Constraint Satisfaction Probl
 
 ---
 
-## Objectives
+## 🎯 Objectives
 
 1. Model hospital bed allocation as a CSP.
 2. Represent patients as CSP variables.
@@ -27,7 +31,7 @@ This project models hospital bed allocation as a **Constraint Satisfaction Probl
 
 ---
 
-## CSP Concepts Used
+## 🤖 CSP Concepts Used
 
 A Constraint Satisfaction Problem contains variables, domains, and constraints.
 
@@ -45,7 +49,7 @@ P001 -> {ICU-01, ICU-02}
 P002 -> {GEN-01, GEN-02}
 ```
 
-### Implemented Constraints
+### ✅ Implemented Constraints
 
 The system checks the following conditions:
 
@@ -57,7 +61,7 @@ The system checks the following conditions:
 
 ---
 
-## System Workflow
+## 🔄 System Workflow
 
 ```text
 User enters patients and beds
@@ -81,7 +85,7 @@ Backtracking solver
 Allocation result shown in Streamlit UI
 ```
 
-### Constraint Propagation
+### 🧠 Constraint Propagation
 
 Constraint propagation removes choices that cannot remain valid after an assignment. For example:
 
@@ -96,13 +100,13 @@ P002 -> {B2}
 
 This reduces unnecessary search before or during solving.
 
-### Backtracking Search
+### 🔍 Backtracking Search
 
 The solver starts with an empty assignment and tries compatible beds for each unassigned patient. If a choice leads to a conflict or dead end, it removes that choice and tries another one. It returns a complete valid allocation when one exists; otherwise, it reports that no complete allocation could be found.
 
 ---
 
-## Architecture
+## 🏗️ System Architecture
 
 ```text
                     User
@@ -136,9 +140,9 @@ The application interface is separated from the CSP logic so that the allocation
 
 ---
 
-## Features
+## ✨ Application Features
 
-### Patient Input
+### 👤 Patient Input
 
 The application accepts:
 
@@ -147,7 +151,7 @@ The application accepts:
 - Required equipment
 - Isolation requirement
 
-### Bed Input
+### 🛏️ Bed Input
 
 The application accepts:
 
@@ -158,7 +162,7 @@ The application accepts:
 - Isolation status
 - Availability status
 
-### Allocation Results
+### 📋 Allocation Results
 
 When the user selects **Allocate Beds**, the application displays:
 
@@ -177,7 +181,7 @@ Patient P003 -> Bed GEN-01
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 | Area | Technology |
 | --- | --- |
@@ -192,7 +196,7 @@ The current version does **not** use SQLite or another database. Persistent stor
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 hospital-bed-allocation/
@@ -231,7 +235,7 @@ hospital-bed-allocation/
 
 ---
 
-## Installation
+## ⚙️ Installation
 
 1. Clone or download the project and open its root directory.
 2. Create a virtual environment:
@@ -262,7 +266,7 @@ pip install -r requirements.txt
 
 ---
 
-## Running the Application
+## ▶️ Running the Application
 
 From the project root, run:
 
@@ -274,7 +278,7 @@ Streamlit will start the application and open it in a browser.
 
 ---
 
-## Testing
+## 🧪 Testing
 
 The project includes component-level and end-to-end tests for:
 
@@ -294,9 +298,9 @@ The following professor demonstration cases have also been prepared for the Stre
 
 ---
 
-## Professor Demonstration Cases
+## 👨‍🏫 Professor Demonstration Cases
 
-### 1. Normal Allocation
+### ✅ 1. Normal Allocation
 
 ```text
 Patients:
@@ -310,7 +314,7 @@ GEN-01 -> General, available
 
 Expected: `P001 -> ICU-01` and `P002 -> GEN-01`.
 
-### 2. Insufficient Suitable Beds
+### ❌ 2. Insufficient Suitable Beds
 
 ```text
 Patients:
@@ -324,7 +328,7 @@ Fewer than three suitable, available ICU beds
 
 Expected: no complete allocation is found.
 
-### 3. Equipment Conflict
+### 🫁 3. Equipment Conflict
 
 ```text
 Patients:
@@ -340,7 +344,7 @@ GEN-01 -> General
 
 Expected: `P001 -> ICU-02`, `P002 -> ICU-01`, and `P003 -> GEN-01`.
 
-### 4. Isolation Conflict
+### 🦠 4. Isolation Conflict
 
 ```text
 Patients:
@@ -356,7 +360,7 @@ GEN-01 -> General
 
 Expected: `P001 -> ICU-02`, `P002 -> ICU-01`, and `P003 -> GEN-01`.
 
-### 5. Unavailable Bed
+### 🚫 5. Unavailable Bed
 
 ```text
 Patients:
@@ -371,7 +375,7 @@ GEN-01 -> General, available
 
 Expected: `P001 -> ICU-02` and `P002 -> GEN-01`. The unavailable ICU bed is ignored.
 
-### 6. No Compatible Bed
+### ⚠️ 6. No Compatible Bed
 
 ```text
 Patients:
@@ -385,7 +389,7 @@ GEN-02 -> General
 
 Expected: no complete allocation is found because P001 has no compatible bed.
 
-### 7. Backtracking Demonstration
+### 🔙 7. Backtracking Demonstration
 
 ```text
 Patients:
@@ -409,7 +413,7 @@ P003 -> GEN-01
 
 The first choice of `ICU-01` for P001 would leave P002 without its only compatible bed. The solver must backtrack and assign P001 to `ICU-02`.
 
-### 8. Multiple Valid Beds
+### 🔀 8. Multiple Valid Beds
 
 ```text
 Patients:
@@ -428,7 +432,7 @@ Expected: P001 and P002 receive different ICU beds, and P003 receives `GEN-01`. 
 
 ---
 
-## Connection to the AI Syllabus
+## 📚 Connection to the AI Syllabus
 
 This project demonstrates core CSP concepts from the Artificial Intelligence syllabus.
 
@@ -442,7 +446,7 @@ This project demonstrates core CSP concepts from the Artificial Intelligence syl
 
 ---
 
-## Limitations
+## ⚠️ Limitations
 
 This is a simplified academic prototype. It does not currently include:
 
@@ -457,7 +461,7 @@ This is a simplified academic prototype. It does not currently include:
 
 ---
 
-## Future Enhancements
+## 🚀 Future Enhancements
 
 Possible future improvements include:
 
@@ -474,7 +478,7 @@ These are not part of the current PBL implementation.
 
 ---
 
-## Academic Scope
+## 🎓 Academic Scope
 
 The project focuses on applying an AI problem-solving technique to a realistic resource-allocation scenario:
 
@@ -498,26 +502,32 @@ It should be presented as a CSP-based decision-support prototype, not as a repla
 
 ---
 
-## Project Status
+## 📊 Project Status
 
 | Component | Status |
 | --- | --- |
-| Project setup | Complete |
-| Patient model | Complete |
-| Bed model | Complete |
-| CSP representation and domains | Complete |
-| Constraints | Complete |
-| Equipment, availability, and isolation rules | Complete |
-| Constraint propagation | Complete |
-| Backtracking solver | Complete |
-| Allocation service | Complete |
-| Streamlit UI | Complete |
-| End-to-end allocation testing | Complete |
-| Database persistence | Postponed / future enhancement |
+| Project setup | ✅ Complete |
+| Patient model | ✅ Complete |
+| Bed model | ✅ Complete |
+| CSP representation and domains | ✅ Complete |
+| Constraints | ✅ Complete |
+| Equipment, availability, and isolation rules | ✅ Complete |
+| Constraint propagation | ✅ Complete |
+| Backtracking solver | ✅ Complete |
+| Allocation service | ✅ Complete |
+| Streamlit UI | ✅ Complete |
+| End-to-end allocation testing | ✅ Complete |
+| Database persistence | ⏸️ Postponed / future enhancement |
 
 ---
 
-## Conclusion
+## 👨‍💻 Author
+
+**Mangali Sai Krishna**
+
+---
+
+## 📌 Conclusion
 
 Hospital Bed Allocation Using CSP demonstrates how a real-world resource-allocation problem can be modeled with Constraint Satisfaction Problems. Patients are represented as variables, suitable beds form their domains, and hospital requirements are represented as constraints. Constraint propagation reduces invalid choices, while backtracking search finds a valid allocation when one exists.
 
