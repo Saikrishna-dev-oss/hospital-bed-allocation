@@ -1,9 +1,12 @@
 import streamlit as st
 
+from pathlib import Path
 from models.patient import Patient
 from models.bed import Bed
 from services.allocation_service import allocate_beds
 
+BASE_DIR = Path(__file__).resolve().parent
+LOGO_PATH = BASE_DIR / "assets" / "hospital_logo.png"
 
 st.set_page_config(
     page_title="Hospital Bed Allocation",
@@ -12,7 +15,14 @@ st.set_page_config(
 )
 
 
-st.title("🏥 Hospital Bed Allocation Using CSP")
+col1, col2 = st.columns([1, 8])
+
+with col1:
+    st.image(str(LOGO_PATH), width=90)
+
+with col2:
+    st.title("Hospital Bed Allocation Using CSP")
+
 
 st.write(
     "A Constraint Satisfaction Problem based system "
@@ -233,28 +243,4 @@ if st.button(
                 st.warning(
                     f"Patient **{patient_id}** could not be allocated."
                 )
-        
-# if st.button(
-#     "🚀 Allocate Beds",
-#     type="primary",
-#     use_container_width=True
-# ):
-
-#     solution = allocate_beds(patients, beds)
-
-#     st.header("📋 Allocation Result")
-
-#     if solution:
-
-#         for patient_id, bed_id in solution.items():
-
-#             st.success(
-#                 f"Patient **{patient_id}** → Bed **{bed_id}**"
-#             )
-
-#     else:
-
-#         st.error(
-#             "No valid complete allocation could be found "
-#             "for the given patients and beds."
-#         )
+ 

@@ -5,5 +5,5 @@ class Bed:
         self.bed_type = bed_type
         self.equipment = equipment
         self.available = available
-        self.isolation = isolation  # Assuming isolation is a boolean indicating if the bed is in an isolation ward
+        self.isolation = isolation 
     

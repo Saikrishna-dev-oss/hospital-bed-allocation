@@ -3,13 +3,11 @@ from csp.propagation import propagate_domains
 from csp.solver import solve_csp
 
 def allocate_beds(patients, beds):
-    # Create the CSP problem
+
     problem = HospitalBedCSP(patients, beds)
 
-    # Propagate domains based on constraints
     propagate_domains(problem)
 
-    # Solve the CSP
     solution = solve_csp(problem)
     if solution is None:
         return {
